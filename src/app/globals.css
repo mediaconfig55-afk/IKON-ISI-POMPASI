@@ -1,26 +1,110 @@
 @import "tailwindcss";
 
+@theme {
+  /* Ethereal Glass — derin OLED siyah üzerine ısıtma/soğutma ikiliği */
+  --color-kuyu: #050505;
+  --color-kuyu-2: #0a0b0d;
+  --color-kat: #101216;
+  --color-kir: #f4f6f8;
+  --color-sis: #8b949e;
+  --color-alev: #f97316;
+  --color-buz: #38bdf8;
+  --color-yesil: #34d399;
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-cam: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-yay: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-kuyu);
+  color: var(--color-kir);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Sabit, pointer-events almayan film grenli doku katmanı */
+.gren::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-buz) 35%, transparent);
+  color: #fff;
+}
+
+/* İnce, cam yüzeye uyan kaydırma çubuğu */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #070809;
+}
+::-webkit-scrollbar-thumb {
+  background: #1d2127;
+  border-radius: 9999px;
+  border: 3px solid #070809;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2b3138;
+}
+
+/* Erişilebilirlik: hareket azaltma tercihine tam uyum */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Küreler yalnızca ötelenir. scale() eklemek, 150px blur'lu dev katmanın her
+ * karede yeniden rasterize edilmesine yol açıyordu (sürekli GPU repaint).
+ * translate + opacity compositor üzerinde kalır, yeniden çizim gerektirmez.
+ */
+@keyframes nefes {
+  0%,
+  100% {
+    opacity: 0.38;
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    opacity: 0.58;
+    transform: translate3d(0, -22px, 0);
+  }
+}
+
+.orb {
+  animation: nefes 18s var(--ease-cam) infinite;
+  will-change: transform;
+}
+
+/* Küçük ekranlarda blur yarıçapı ve katman alanı orantısız pahalı: sabitle. */
+@media (max-width: 640px) {
+  .orb {
+    animation: none;
+    opacity: 0.4;
+  }
 }
