@@ -64,11 +64,19 @@ type JevYaniti = {
 /** Çalışma sınırı −20 °C olan modeller; sert iklimde tek başlarına önerilmez. */
 const DUSUK_SINIR = new Set(["nibe-f2040", "nibe-split-ams-hbs-05"]);
 
+/**
+ * Ortam değişkeni panelden veya CLI'dan yapıştırıldığında başına/sonuna BOM,
+ * boşluk veya satır sonu karışabiliyor; bunlar HTTP başlığını geçersiz kılar.
+ */
+function anahtar(): string {
+  return (process.env.TYPESAFE_API_KEY ?? "").replace(/^﻿/, "").trim();
+}
+
 async function jevSor(talep: string, signal: AbortSignal): Promise<JevYaniti> {
   const istek = await fetch(API_URL, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${process.env.TYPESAFE_API_KEY}`,
+      Authorization: `Bearer ${anahtar()}`,
       "Content-Type": "application/json",
     },
     signal,
@@ -260,7 +268,7 @@ export async function POST(request: Request) {
     kapasite: null,
   };
 
-  if (process.env.TYPESAFE_API_KEY) {
+  if (anahtar()) {
     const kontrol = AbortSignal.timeout(15_000);
     try {
       const jev = await jevSor(talep, kontrol);
