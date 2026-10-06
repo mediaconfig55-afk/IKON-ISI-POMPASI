@@ -6,10 +6,10 @@ export const FIRMA = {
   yetkili: "Mesut Kozan",
   adres: "Mevlana Mah. Bornova Cad. No: 151, Atakum / Samsun",
   adresKisa: "Atakum / Samsun",
-  telefonGosterim: "0531 645 05 55",
+  telefonGosterim: "905325954566",
   /** wa.me için ülke kodlu, sadece rakam */
-  telefonWhatsapp: "905316450555",
-  telefonTel: "+905316450555",
+  telefonWhatsapp: "905325954566",
+  telefonTel: "+905325954566",
   instagramKullanici: "lkonklima",
   instagramUrl: "https://www.instagram.com/lkonklima/",
   haritaUrl:
